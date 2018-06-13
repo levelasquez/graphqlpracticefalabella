@@ -1,6 +1,13 @@
 const resolvers = {
   Query: {
-    users: (parent, args, context) => context.models.User.find(),
+    users: (parent, args, context) => {
+      if (args.filter) {
+        const regex = new RegExp(args.filter, 'i')
+
+        return context.models.User.find({ name: regex })
+      }
+      return context.models.User.find()
+    },
   },
   User: {
     friends(user, args, ctx) {
